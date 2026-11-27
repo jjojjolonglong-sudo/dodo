@@ -23,6 +23,8 @@ button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;background:none;border:none;padding:0}
 [hidden]{display:none!important}
 #desk{position:fixed;inset:0;overflow:hidden;touch-action:pan-y}
+body.pc #desk{overflow:auto}
+body.pc #stage{padding:0 16px 60px 0}
 body.editing #desk{overflow-y:auto}
 #stage{position:absolute}
 #book{position:relative;display:flex}
@@ -44,10 +46,11 @@ body.editing #desk{overflow-y:auto}
 .dh .d .tape{left:-5px;right:-8px;top:4px;height:18px;transform:rotate(-2deg)}
 .dh .d b{position:relative;font-weight:600}
 .dh .m{font-family:var(--mono);font-size:11px;color:var(--sub);line-height:var(--row)}
-.dh .pen{position:absolute;right:-8px;top:-29px;width:32px;height:28px;display:grid;place-items:center;opacity:.55}
+.dh .pen{position:absolute;right:-8px;top:-24px;width:32px;height:22px;display:grid;place-items:center;opacity:.55}
 .dh .pen:hover{opacity:1}
 .dh .pen svg{width:14px;height:14px;fill:none;stroke:var(--ink);stroke-width:1.5}
 .dh.ghost .d,.dh.ghost .m{opacity:.5}
+.pb>.wh:first-child,#meas>.wh:first-child{margin-top:0}
 .wh{margin-top:var(--row);font-family:var(--hand);font-size:12px;line-height:var(--row);height:var(--row);color:var(--sub)}
 .wi{font-family:var(--hand);font-size:14px;line-height:var(--row);display:flex;gap:6px;cursor:pointer;word-break:break-all}
 .wi .n{font-family:var(--mono);font-size:11px;color:var(--sub);min-width:18px;flex:none}
@@ -84,11 +87,11 @@ body.editing #desk{overflow-y:auto}
 .cv .ytape .tape{inset:0}
 .cv .ytape span{position:relative;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:2px;color:var(--ink)}
 /* 쪽 넘기기: 아래 모서리. 마우스를 올리거나 누르는 동안 모퉁이가 살짝 들린 그늘 */
-.cnr{position:absolute;bottom:0;width:66px;height:66px;z-index:2;cursor:pointer}
+.cnr{position:absolute;bottom:0;width:96px;height:96px;z-index:2;cursor:pointer}
 .cnr.cl{left:0}.cnr.cr{right:0}
 .cnr::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .22s ease}
-.cnr.cr::before{background:linear-gradient(to top left,rgba(244,236,242,.95) 0,#fff 12px,rgba(59,51,70,.13) 12.6px,rgba(59,51,70,.05) 26px,transparent 46px)}
-.cnr.cl::before{background:linear-gradient(to top right,rgba(244,236,242,.95) 0,#fff 12px,rgba(59,51,70,.13) 12.6px,rgba(59,51,70,.05) 26px,transparent 46px)}
+.cnr.cr::before{background:radial-gradient(circle at 100% 100%,rgba(59,51,70,.2) 0,rgba(59,51,70,.09) 34px,rgba(59,51,70,.025) 62px,transparent 90px)}
+.cnr.cl::before{background:radial-gradient(circle at 0 100%,rgba(59,51,70,.2) 0,rgba(59,51,70,.09) 34px,rgba(59,51,70,.025) 62px,transparent 90px)}
 @media(hover:hover){.cnr:hover::before{opacity:1}}
 .cnr.on::before{opacity:1}
 .cnr.off{display:none}
@@ -214,16 +217,20 @@ const wishOf=id=>S.wishes.find(w=>w.id===id);
 const entryLinks=eid=>S.links.filter(l=>l.entry_id===eid).sort((a,b)=>a.pos-b.pos);
 const wishCount=id=>S.links.filter(l=>l.wish_id===id).length;
 
-/* ---------- 종이는 고정 크기. 화면이 작으면 통째로 줄이고, 넓으면(PC) 두 쪽 ---------- */
-const PW=360,PH=620,TAB=30;
+/* ---------- 글 칸은 어디서나 같은 크기(폭 304 × 21줄) → 줄 수·줄바꿈이 휴대폰·PC 똑같음.
+   종이 여백만 다름: 휴대폰은 화면 폭·높이에 맞춰 꽉, PC는 넉넉한 여백에 원래 크기(창이 작으면 스크롤). ---------- */
+const TAB=30,CW=304,ROWS=21,CH=ROWS*ROW;
+const coarse=()=>matchMedia('(pointer:coarse)').matches;
 function measureLayout(){
-  const vw=innerWidth,vh=innerHeight,two=vw>=PW*2+TAB+80;
-  const needW=two?PW*2+TAB*2:PW,needH=two?PH:PH+TAB;
-  /* 휴대폰은 종이를 화면 폭에 꽉 채움, PC 두 쪽은 원래 크기(작으면 줄이기만) */
-  const sc=two?Math.min(1,(vw-40)/needW,(vh-56)/needH):Math.min(vw/needW,(vh-50)/needH);
-  /* 안쪽 여백: 휴대폰(한 쪽) 위 32·옆 28·아래 42, PC 두 쪽은 넉넉하게 */
-  const pt=two?52:32,ps=two?52:28,pbm=two?56:42;
-  return{two,W:PW,H:PH,pt,ps,pbm,cw:PW-ps*2,ch:Math.floor((PH-pt-pbm)/ROW)*ROW,sc,key:String(two)};
+  const vw=innerWidth,vh=innerHeight;
+  const P={ps:52,pt:52,pbm:56};const PWp=CW+P.ps*2,PHp=CH+P.pt+P.pbm;
+  const two=vw>=PWp*2+TAB+60&&(!coarse()||vh>=PHp+60);
+  if(two||!coarse())return{two,W:PWp,H:PHp,pt:P.pt,ps:P.ps,pbm:P.pbm,cw:CW,ch:CH,sc:1,pc:true,key:[two,PWp,PHp].join()};
+  /* 휴대폰: 옆 여백 28, 화면 폭에 꽉 채우고 남는 높이는 위아래 여백으로 */
+  const ps=28,W=CW+ps*2,sc=vw/W;
+  const H=Math.max(CH+32+42,Math.floor((vh-50)/sc)-TAB);
+  const pt=32+Math.floor((H-CH-74)/2),pbm=H-CH-pt;
+  return{two:false,W,H,pt,ps,pbm,cw:CW,ch:CH,sc,pc:false,key:[W,H,sc].join()};
 }
 function applyLayout(L){
   const r=document.documentElement.style;
@@ -243,7 +250,7 @@ function blockHTML(b){
     case 'p':return `<div class="bk">${b.t===''?'​':esc(b.t)}</div>`;
     case 'wh':return `<div class="wh">언젠가 해보고 싶은 나의 꿈</div>`;
     case 'w':return `<div class="wi" data-key="${b.key}"><span class="n">${b.n}.</span><span class="t"><span class="${b.done?'hl':''}">${esc(b.text)}</span></span></div>`;
-    case 'new':return `<div class="new" data-new="${b.day}"><svg viewBox="0 0 20 20"><use href="#i-pen"/></svg>눌러서 오늘 일기 쓰기</div>`;
+    case 'new':return `<div class="new" data-new="${b.day}">오늘 일기 쓰기<svg viewBox="0 0 20 20"><use href="#i-pen"/></svg></div>`;
     case 'at':return `<div class="at">나의 꿈 목록</div>`;
     case 'aw':return `<div class="wi" data-akey="${b.key}"><span class="n">${b.n}.</span><span class="t"><span class="${b.done?'hl':''}">${esc(b.text)}</span>${b.occ>1?`<span class="dots" title="${b.occ}번째">${'•'.repeat(Math.min(b.occ,9))}</span>`:''}<span class="dt">(${slash(b.day)})</span></span></div>`;
     case 'ai':return `<div class="ai"><span>${b.date.replace(/-/g,'.')} 이룸${b.memo?' · '+esc(b.memo):''}</span><button data-fix="${b.key}">고치기</button></div>`;
@@ -324,8 +331,9 @@ function pageHTML(list,i,side){
 function place(tw,th){
   const L=S.L,st=$('#stage');
   $('#book').style.zoom=L.sc;
-  st.style.left=Math.max(0,Math.round((innerWidth-tw*L.sc)/2))+'px';
-  st.style.top=Math.max(L.two?8:0,Math.round((innerHeight-44-th*L.sc)/2))+'px';
+  document.body.classList.toggle('pc',L.pc);
+  if(L.pc){st.style.left=Math.max(16,Math.round((innerWidth-tw)/2))+'px';st.style.top=Math.max(16,Math.round((innerHeight-44-th)/2))+'px'}
+  else{st.style.left='0px';st.style.top='0px'}
 }
 function render(){
   if(S.ed)return renderEditor();
@@ -358,11 +366,8 @@ function anchor(){
 function relayout(){
   if(S.ed)return;
   const L=measureLayout();
-  if(S.L&&S.L.key===L.key){S.L=L;render();return}
-  const anc=S.L?anchor():null;
-  S.L=L;applyLayout(L);build();
-  if(anc){const list=S.mode==='apx'?S.ap:S.dp,i=findPage(list,anc);if(i>=0){if(S.mode==='apx')S.pa=i;else S.p=i}}
-  render();
+  /* 글 칸 크기는 늘 같아서 쪽 나눔은 그대로, 여백·배치만 다시 */
+  S.L=L;applyLayout(L);render();
 }
 function goDay(day){
   const jump=()=>{S.mode='diary';const i=S.dp.findIndex(pg=>pg[0]&&pg[0].includes(`data-edit="${day}"`));if(i>=0)S.p=i;render()};
@@ -620,7 +625,7 @@ $('#book').addEventListener('pointerdown',e=>{const c=e.target.closest('.cnr');i
 let tx=null,ty=null;
 $('#desk').addEventListener('touchstart',e=>{if(S.ed)return;tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 $('#desk').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)turn(dx<0?1:-1)},{passive:true});
-document.addEventListener('keydown',e=>{if(S.ed||$('#app').hidden)return;if(e.target.closest('input,textarea,[contenteditable]'))return;if(e.key==='ArrowLeft')turn(-1);if(e.key==='ArrowRight')turn(1)});
+document.addEventListener('keydown',e=>{if(S.ed||$('#app').hidden)return;if(e.target.closest('input,textarea,[contenteditable]'))return;if(e.key==='ArrowLeft'){e.preventDefault();turn(-1)}if(e.key==='ArrowRight'){e.preventDefault();turn(1)}});
 let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(!$('#app').hidden&&S.L)relayout()},150)});
 
 /* ---------- 로그인 ---------- */
