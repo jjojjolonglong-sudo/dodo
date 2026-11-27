@@ -6,6 +6,7 @@ create table if not exists public.dodo_entry (
   user_id uuid not null default auth.uid(),
   day date not null,                       -- 일기 날짜(한국 시간)
   body text not null default '',           -- 본문
+  started_at timestamptz,                  -- 쓰기 시작한 시각 (day는 이 시각에서 오전 7시 기준으로 나눔, 2026-11-27 추가)
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (user_id, day)
