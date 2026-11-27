@@ -29,11 +29,11 @@ body.editing #desk{overflow-y:auto}
 .two .pg.l{box-shadow:0 10px 28px rgba(59,51,70,.13),inset -16px 0 18px -16px rgba(59,51,70,.2)}
 .two .pg.r{box-shadow:0 10px 28px rgba(59,51,70,.13),inset 16px 0 18px -16px rgba(59,51,70,.2)}
 .pg.dream{background:var(--dream)}
-.pb{position:absolute;top:var(--pt);left:var(--ps);width:var(--cw);height:var(--ch);background-image:repeating-linear-gradient(180deg,transparent 0,transparent calc(var(--row) - 1px),var(--line) calc(var(--row) - 1px),var(--line) var(--row))}
-.pg.dream .pb{background-image:repeating-linear-gradient(180deg,transparent 0,transparent calc(var(--row) - 1px),rgba(59,51,70,.09) calc(var(--row) - 1px),rgba(59,51,70,.09) var(--row))}
+.pb{position:absolute;top:var(--pt);left:var(--ps);width:var(--cw);height:var(--ch);background-image:linear-gradient(var(--line),var(--line)),repeating-linear-gradient(180deg,transparent 0,transparent calc(var(--row) - 1px),var(--line) calc(var(--row) - 1px),var(--line) var(--row));background-size:100% 1px,auto;background-repeat:no-repeat,repeat}
+.pg.dream .pb{background-image:linear-gradient(rgba(59,51,70,.09),rgba(59,51,70,.09)),repeating-linear-gradient(180deg,transparent 0,transparent calc(var(--row) - 1px),rgba(59,51,70,.09) calc(var(--row) - 1px),rgba(59,51,70,.09) var(--row))}
 .pn{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:10px;color:var(--faint)}
 /* 마스킹테이프(양끝 톱니 6개) */
-.tape{position:absolute;opacity:.9;clip-path:polygon(100% 0,calc(100% - 3.5px) 8.33%,100% 16.67%,calc(100% - 3.5px) 25%,100% 33.33%,calc(100% - 3.5px) 41.67%,100% 50%,calc(100% - 3.5px) 58.33%,100% 66.67%,calc(100% - 3.5px) 75%,100% 83.33%,calc(100% - 3.5px) 91.67%,100% 100%,0 100%,3.5px 91.67%,0 83.33%,3.5px 75%,0 66.67%,3.5px 58.33%,0 50%,3.5px 41.67%,0 33.33%,3.5px 25%,0 16.67%,3.5px 8.33%,0 0)}
+.tape{position:absolute;opacity:.9;clip-path:polygon(100% 0,calc(100% - 2px) 8.33%,100% 16.67%,calc(100% - 2px) 25%,100% 33.33%,calc(100% - 2px) 41.67%,100% 50%,calc(100% - 2px) 58.33%,100% 66.67%,calc(100% - 2px) 75%,100% 83.33%,calc(100% - 2px) 91.67%,100% 100%,0 100%,2px 91.67%,0 83.33%,2px 75%,0 66.67%,2px 58.33%,0 50%,2px 41.67%,0 33.33%,2px 25%,0 16.67%,2px 8.33%,0 0)}
 /* 페이지 안 글: 모든 줄이 26px 줄눈 위에 */
 .bk{font-family:var(--hand);font-size:14px;line-height:var(--row);white-space:pre-wrap;word-break:break-all;text-align:justify;margin:0;min-height:var(--row)}
 .dh{height:var(--row);display:flex;align-items:center;justify-content:space-between;position:relative}
@@ -41,7 +41,7 @@ body.editing #desk{overflow-y:auto}
 .dh .d .tape{left:-5px;right:-8px;top:4px;height:18px;transform:rotate(-2deg)}
 .dh .d b{position:relative;font-weight:600}
 .dh .m{font-family:var(--mono);font-size:11px;color:var(--sub);line-height:var(--row)}
-.dh .pen{position:absolute;right:-8px;top:calc(var(--row) * -1 - 6px);width:32px;height:30px;display:grid;place-items:center;opacity:.55}
+.dh .pen{position:absolute;right:-8px;top:-29px;width:32px;height:28px;display:grid;place-items:center;opacity:.55}
 .dh .pen:hover{opacity:1}
 .dh .pen svg{width:14px;height:14px;fill:none;stroke:var(--ink);stroke-width:1.5}
 .dh.ghost .d,.dh.ghost .m{opacity:.5}
@@ -77,9 +77,9 @@ body.editing #desk{overflow-y:auto}
 .cv .rule i{display:block;width:62px;height:1px;background:linear-gradient(90deg,transparent,var(--goldc))}
 .cv .rule i+b+i{background:linear-gradient(90deg,var(--goldc),transparent)}
 .cv .rule b{width:5px;height:5px;background:var(--goldc);transform:rotate(45deg)}
-.cv .tag{margin-top:auto;width:196px;height:54px;cursor:pointer;position:relative;filter:drop-shadow(0 2px 3px rgba(59,51,70,.14))}
-.cv .tag svg{position:absolute;inset:0;width:100%;height:100%}
-.cv .tag span{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:15px;font-weight:600;color:#B05A68;letter-spacing:2px}
+.cv .ytape{margin-top:auto;position:relative;width:150px;height:34px;display:grid;place-items:center;cursor:pointer;transform:rotate(-2.5deg)}
+.cv .ytape .tape{inset:0}
+.cv .ytape span{position:relative;font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:3px;color:var(--ink)}
 /* Dream 인덱스: 살짝 둥글게 깎인 납작한 사다리꼴 */
 #tab{position:absolute;z-index:3;display:grid;place-items:center;font-family:var(--it);font-style:italic;font-weight:600;font-size:16px;color:var(--ink)}
 #tab svg{position:absolute;inset:0;width:100%;height:100%}
@@ -92,6 +92,7 @@ body.editing #desk{overflow-y:auto}
 #edCols{height:var(--ph);overflow:hidden;padding:var(--pt) var(--ps) var(--pbm);column-width:var(--cw);column-gap:calc(var(--ps) * 2);column-fill:auto;
  background:linear-gradient(90deg,rgba(59,51,70,.14) 0,rgba(59,51,70,.14) 1px,transparent 1px) 0 0/var(--pw) 100% repeat-x local,
   linear-gradient(90deg,var(--paper) 0,var(--paper) var(--ps),transparent var(--ps),transparent calc(var(--pw) - var(--ps)),var(--paper) calc(var(--pw) - var(--ps))) 0 0/var(--pw) 100% repeat-x local,
+  linear-gradient(var(--line),var(--line)) 0 var(--pt)/100% 1px no-repeat local,
   repeating-linear-gradient(180deg,transparent 0,transparent calc(var(--row) - 1px),var(--line) calc(var(--row) - 1px),var(--line) var(--row)) 0 var(--pt)/100% var(--ch) no-repeat local,
   var(--paper)}
 #edCols .dh .d input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
@@ -205,12 +206,14 @@ const entryLinks=eid=>S.links.filter(l=>l.entry_id===eid).sort((a,b)=>a.pos-b.po
 const wishCount=id=>S.links.filter(l=>l.wish_id===id).length;
 
 /* ---------- 종이는 고정 크기. 화면이 작으면 통째로 줄이고, 넓으면(PC) 두 쪽 ---------- */
-const PW=360,PH=620,PT=32,PS=28,PBM=42,TAB=30;
+const PW=360,PH=620,TAB=30;
 function measureLayout(){
   const vw=innerWidth,vh=innerHeight,two=vw>=PW*2+TAB+80;
   const needW=two?PW*2+TAB*2:PW,needH=two?PH:PH+TAB;
   const sc=Math.min(1,(vw-(two?40:16))/needW,(vh-(two?56:52))/needH);
-  return{two,W:PW,H:PH,pt:PT,ps:PS,pbm:PBM,cw:PW-PS*2,ch:Math.floor((PH-PT-PBM)/ROW)*ROW,sc,key:String(two)};
+  /* 안쪽 여백: 휴대폰(한 쪽) 위 32·옆 28·아래 42, PC 두 쪽은 넉넉하게 */
+  const pt=two?52:32,ps=two?52:28,pbm=two?56:42;
+  return{two,W:PW,H:PH,pt,ps,pbm,cw:PW-ps*2,ch:Math.floor((PH-pt-pbm)/ROW)*ROW,sc,key:String(two)};
 }
 function applyLayout(L){
   const r=document.documentElement.style;
@@ -294,13 +297,6 @@ function build(){S.dp=[['COVER']].concat(paginate(diaryGroups()));S.ap=paginate(
 /* ---------- 그리기 ---------- */
 const TAB_ONE='<svg viewBox="0 0 88 30" aria-hidden="true"><path d="M0 0H88L80.6 25.4Q79 30 74 30H14Q9 30 7.4 25.4Z"/></svg>';
 const TAB_TWO='<svg viewBox="0 0 30 88" aria-hidden="true"><path d="M0 0L25.4 7.4Q30 9 30 14V74Q30 79 25.4 80.6L0 88Z"/></svg>';
-/* 분홍 육각 택: 바느질 선 + 안쪽 금장 육각형 + 양끝 구멍 */
-function hexPts(x0,y0,x1,y1,tip){const m=(y0+y1)/2;return `${x0+tip},${y0} ${x1-tip},${y0} ${x1},${m} ${x1-tip},${y1} ${x0+tip},${y1} ${x0},${m}`}
-const TAG=`<svg viewBox="0 0 196 54" aria-hidden="true"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EED79C"/><stop offset=".45" stop-color="#CFA752"/><stop offset=".6" stop-color="#9C7228"/><stop offset="1" stop-color="#D9B867"/></linearGradient></defs>
-<polygon points="${hexPts(0,0,196,54,22)}" fill="#F4C6C3"/>
-<polygon points="${hexPts(5,4.5,191,49.5,19.5)}" fill="none" stroke="#B05A68" stroke-width="1.1" stroke-dasharray="3.2 2.6" stroke-linejoin="round"/>
-<polygon points="${hexPts(30,11,166,43,10)}" fill="none" stroke="url(#tg)" stroke-width="1.2"/>
-<circle cx="14" cy="27" r="3.6" fill="#FFFEFC" stroke="rgba(120,60,70,.35)" stroke-width=".8"/><circle cx="182" cy="27" r="3.6" fill="#FFFEFC" stroke="rgba(120,60,70,.35)" stroke-width=".8"/></svg>`;
 function pageHTML(list,i,side){
   const pg=list[i],dr=list===S.ap?' dream':'';
   if(!pg)return `<div class="pg ${side}${dr}"><div class="pb"></div></div>`;
@@ -310,7 +306,7 @@ function pageHTML(list,i,side){
     <div class="big gold">DODO</div>
     <div class="rule"><i></i><b></b><i></i></div>
     <div class="ko gold">내일을 기대하며 잠들기</div>
-    <div class="tag" id="cvYear" role="button" aria-label="다른 해 고르기">${TAG}<span>${S.year}</span></div></div></div>`;
+    <div class="ytape" id="cvYear" role="button" aria-label="다른 해 고르기"><i class="tape" style="background:${DAYC[0]}"></i><span>${S.year}</span></div></div></div>`;
   const no=list===S.dp?i:i+1;
   return `<div class="pg ${side}${dr}"><div class="pb">${pg.join('')}</div><div class="pn">${no}</div></div>`;
 }
